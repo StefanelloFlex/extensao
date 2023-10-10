@@ -1,0 +1,20 @@
+{
+    "name": "Redmine Flexmobile",
+    "version": "1.0.1",
+    "description": "Executa alguns ajustes na página de chamado do Redmine",
+    "manifest_version": 3,
+    "icons": {
+        "128": "128.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "http://sac.flexmobile.com.br/redmine/issues/*",
+                "http://192.168.1.5/redmine/issues/*"
+            ],
+            "js": [
+                "hide.js"
+            ]
+        }
+    ]
+}
