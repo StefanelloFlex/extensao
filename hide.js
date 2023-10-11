@@ -14,12 +14,12 @@ check.onchange = function (event) {
                 else {
                     child.removeAttribute("style")
                 }
-                chrome.storage.sync.set({'checked': event.target.checked})
+                chrome.storage.local.set({"checked": event.target.checked})
             }
         }
     }
 }
-chrome.storage.sync.get(['checked'], function(items){
+chrome.storage.local.get(["checked"], function(items){
     if (items.checked) {
         check.click()
     }
