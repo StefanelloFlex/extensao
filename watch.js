@@ -6,6 +6,14 @@ var listaObservadas = []
 var checkNome = false
 var listaNome = []
 
+
+function callback(notificationId) {
+    chrome.storage.local.get(["location"], function (items) { location = items.location })
+    if (!location) return
+    chrome.tabs.create({ "url": "http://" + location + "/redmine/issues/" + notificationId })
+}
+chrome.notifications.onClicked.addListener(callback)
+
 function notificar(issue, tipo) {
     let options = {
         type: "basic",
@@ -13,20 +21,24 @@ function notificar(issue, tipo) {
         iconUrl: "128.png"
     }
     if (tipo == 1)
-        options.message = 'Mudou para a situação: ' + issue.status_name
+        options.message = "Mudou para a situação: " + issue.status_name
     else if (tipo == 2)
-        options.message = 'Foi atribuído à você.'
+        options.message = "Foi atribuído à você."
 
-    chrome.notifications.create(options)
+    chrome.notifications.create(issue.id.toString(), options)
 }
 
 function watchIssues() {
-    chrome.storage.local.get(["location", "redmineToken", "checkObservadas", "checkNome"], function (items) {
-        location = items.location
-        redmineToken = items.redmineToken
-        checkObservadas = items.checkObservadas
-        checkNome = items.checkNome
-    })
+    chrome.storage.local.get([
+        "location",
+        "redmineToken",
+        "checkObservadas",
+        "checkNome"], function (items) {
+            location = items.location
+            redmineToken = items.redmineToken
+            checkObservadas = items.checkObservadas
+            checkNome = items.checkNome
+        })
 
     try {
         if (!location) return
@@ -36,7 +48,7 @@ function watchIssues() {
 
         var novaListaObservadas = []
         if (checkObservadas) {
-            fetch('http://' + location + "/redmine/issues.json?set_filter=1&watcher_id=me&status_id=o&limit=100", header).then(r => r.json()).then(result => {
+            fetch("http://" + location + "/redmine/issues.json?set_filter=1&watcher_id=me&status_id=o&limit=100", header).then(r => r.json()).then(result => {
                 listaObservadas.forEach(observada => {
                     result.issues.forEach(issue => {
                         if (observada.id == issue.id) {
@@ -75,7 +87,7 @@ function watchIssues() {
 
         var novaListaNome = []
         if (checkNome) {
-            fetch('http://' + location + "/redmine/issues.json?set_filter=1&assigned_to_id=me&status_id=o&limit=100", header).then(r => r.json()).then(result => {
+            fetch("http://" + location + "/redmine/issues.json?set_filter=1&assigned_to_id=me&status_id=o&limit=100", header).then(r => r.json()).then(result => {
                 listaNome.forEach(observada => {
                     result.issues.forEach(issue => {
                         if (observada.id == issue.id) {
