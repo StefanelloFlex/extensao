@@ -1,5 +1,5 @@
 {
-    "version": "2.1.1",
+    "version": "3.0.0",
     "name": "Redmine Flexmobile",
     "description": "Ajustes na página e notificações",
     "icons": {
@@ -24,7 +24,8 @@
             ],
             "js": [
                 "hide.js",
-                "page.js"
+                "page.js",
+                "width.js"
             ]
         }
     ],

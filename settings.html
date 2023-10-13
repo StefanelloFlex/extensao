@@ -5,13 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Redmine Flexmobile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <style>
-        body {
-            min-height: 400px
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 
 <body>
@@ -21,7 +16,7 @@
             <input type="password" class="form-control" id="redmineToken" aria-describedby="tokenHelp">
             <div id="tokenHelp" class="form-text">Disponível em Redmine > Minha conta.</div>
         </div>
-        
+
         <label class="form-label">Notificações:</label>
         <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="checkObservadas" aria-describedby="observadasHelp">
@@ -33,10 +28,14 @@
             <label class="form-check-label" for="checkNome">Tarefas em meu nome</label>
             <div id="nomeHelp" class="form-text">Notifica novas tarefas atribuídas ao usuário.</div>
         </div>
+        <hr>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="checkWidth" aria-describedby="widthHelp">
+            <label class="form-check-label" for="checkWidth">Utilizar largura total na página de chamados</label>
+        </div>
 
-        <button id="save" type="button" class="btn btn-primary">Confirmar</button>
-
-        <div id="alertSuccess" style="display: none" class="alert alert-success mt-1" role="alert">Salvo com sucesso!</div>
+        <button id="save" type="button" class="btn btn-primary">Confirmar <i id="alertSuccess" class="bi bi-check"
+                style="display: none"></i></button>
     </div>
 
     <script src="settings.js"></script>
