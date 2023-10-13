@@ -48,7 +48,7 @@ function watchIssues() {
 
         var novaListaObservadas = []
         if (checkObservadas) {
-            fetch("http://" + location + "/redmine/issues.json?set_filter=1&watcher_id=me&status_id=o&limit=100", header).then(r => r.json()).then(result => {
+            fetch("http://" + location + "/redmine/issues.json?set_filter=1&watcher_id=me&limit=100", header).then(r => r.json()).then(result => {
                 listaObservadas.forEach(observada => {
                     result.issues.forEach(issue => {
                         if (observada.id == issue.id) {
