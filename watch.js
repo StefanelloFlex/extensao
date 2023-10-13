@@ -21,9 +21,10 @@ function notificar(issue, tipo) {
         iconUrl: "128.png"
     }
     if (tipo == 1)
-        options.message = "Mudou para a situação: " + issue.status_name
+        options.message = "Mudou para a situação:\n"
     else if (tipo == 2)
-        options.message = "Foi atribuído à você."
+        options.message = "Foi atribuído à você.\n"
+    options.message += issue.status_name
 
     chrome.notifications.create(issue.id.toString(), options)
 }
