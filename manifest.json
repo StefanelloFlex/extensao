@@ -1,5 +1,5 @@
 {
-    "version": "3.1.0",
+    "version": "3.0.0",
     "name": "Redmine Flexmobile",
     "description": "Ajustes na página e notificações",
     "icons": {
@@ -19,13 +19,15 @@
     "content_scripts": [
         {
             "matches": [
-                "http://sac.flexmobile.com.br/redmine/issues/*",
-                "http://192.168.1.5/redmine/issues/*"
+                "http://sac.flexmobile.com.br/redmine/*",
+                "http://192.168.1.5/redmine/*"
             ],
             "js": [
                 "hide.js",
-                "page.js",
-                "width.js"
+                "page.js"
+            ],
+            "css": [
+                "width.css"
             ]
         }
     ],
