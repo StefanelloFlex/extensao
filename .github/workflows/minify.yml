@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   read:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     steps:
     - name: Checkout
@@ -15,4 +15,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       id: dir
       with:
-        directory: './' ## minify all files from root directory
+        directory: './'
