@@ -1,6 +1,8 @@
 name: minisauras
 
-on: [push]
+on:
+  push:
+    branches: [main]
 
 jobs:
   read:
@@ -10,7 +12,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: minisauras
-      uses: dudustefanello/minisauras@main
+      uses: TeamTigers/minisauras@v2.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       id: dir
