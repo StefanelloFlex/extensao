@@ -10,7 +10,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: minisauras
-      uses: TeamTigers/minisauras@v2.0.0
+      uses: dudustefanello/minisauras@main
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       id: dir
