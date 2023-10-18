@@ -6,7 +6,7 @@ def zipdir(path, ziph):
     for root, dirs, files in os.walk(path):
         for file in files:
             if file in [
-                    '129.png',
+                    '128.png',
                     'hide.js',
                     'manifest.json',
                     'page.js',
