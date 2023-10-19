@@ -17,12 +17,12 @@ function main() {
                     else {
                         child.removeAttribute("style")
                     }
-                    chrome.storage.local.set({"checked": event.target.checked})
+                    chrome.storage.local.set({ "checked": event.target.checked })
                 }
             }
         }
     }
-    chrome.storage.local.get(["checked"], function(items){
+    chrome.storage.local.get(["checked"], function (items) {
         if (items.checked) {
             check.click()
         }

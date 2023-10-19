@@ -8,4 +8,3 @@
 #### Notifica o usuário sobre alterações nas tarefas:
 - Mudança de situação em tarefas observadas.
 - Novas tarefas atribuídas ao usuário.
-
