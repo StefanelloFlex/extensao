@@ -148,7 +148,7 @@ function watchIssues() {
             })
     }
     finally {
-        setTimeout(watchIssues, 30000)
+        setTimeout(watchIssues, 60000)
     }
 }
 watchIssues()
