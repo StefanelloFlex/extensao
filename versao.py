@@ -3,14 +3,16 @@ import json
 import zipfile
 
 zippable = [
+        'manifest.json',
         '128.png',
         'hide.js',
-        'manifest.json',
-        'page.js',
         'settings.html',
         'settings.js',
+        'page.js',
         'watch.js',
-        'width.css'
+        'width.css',
+        'bootstrap.bundle.min.js',
+        'bootstrap.min.css',
     ]
 
 with zipfile.ZipFile(json.load(open('manifest.json'))['version'].replace('.', '_') + '.zip', 'w', zipfile.ZIP_DEFLATED) as ziph:
