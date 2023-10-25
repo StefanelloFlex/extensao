@@ -2,7 +2,8 @@ const saveOptions = () => {
     chrome.storage.local.set({
         "redmineToken": document.getElementById("redmineToken").value,
         "checkObservadas": document.getElementById("checkObservadas").checked,
-        "checkNome": document.getElementById("checkNome").checked
+        "checkNome": document.getElementById("checkNome").checked,
+        "statusAndamento": document.getElementById("statusAndamento").value
     }, function () {
         document.getElementById("alertSuccess").removeAttribute("style")
         setTimeout(function () {
@@ -15,10 +16,12 @@ const restoreOptions = () => {
     chrome.storage.local.get([
         "redmineToken",
         "checkObservadas",
-        "checkNome"], function (items) {
+        "checkNome",
+        "statusAndamento"], function (items) {
             document.getElementById("redmineToken").value = items.redmineToken
             document.getElementById("checkObservadas").checked = items.checkObservadas
             document.getElementById("checkNome").checked = items.checkNome
+            document.getElementById("statusAndamento").value = items.statusAndamento
         })
 }
 

@@ -1,14 +1,36 @@
 var firstTime = true
 var listaObservadas = []
 var listaNome = []
+var ultimaNotificacaoExecucao = null
 
 function callback(notificationId) {
     chrome.storage.local.get(["location", "protocol"], function (items) {
         if (!items.location) return
-        chrome.tabs.create({ "url": items.protocol + "//" + items.location + "/redmine/issues/" + notificationId })
+        if (notificationId == 'andamento')
+            chrome.tabs.create({ "url": items.protocol + "//" + items.location + "/redmine/issues?query_id=417" })
+        else
+            chrome.tabs.create({ "url": items.protocol + "//" + items.location + "/redmine/issues/" + notificationId })
     })
 }
 chrome.notifications.onClicked.addListener(callback)
+
+function notificarExecucao(contagem) {
+    let agora = new Date()
+    if (ultimaNotificacaoExecucao != null && ((agora.getTime() - ultimaNotificacaoExecucao.getTime()) / 60000) < 5)
+        return
+    ultimaNotificacaoExecucao = new Date()
+
+    let options = { type: "basic", iconUrl: "128.png" }
+    if (contagem > 0) {
+        options.title = "Mais de um chamado em andamento!\n"
+        options.message = "Há mais de um chamado em andamento no seu nome. Verifique\n"
+    }
+    else {
+        options.title = "Nenhum chamado em andamento!\n"
+        options.message = "Você não possui chamado em andamento. Verifique\n"
+    }
+    chrome.notifications.create('andamento', options)
+}
 
 function notificar(issue, tipo) {
     let options = {
@@ -26,13 +48,14 @@ function notificar(issue, tipo) {
 }
 
 function watchIssues() {
-    chrome.storage.local.get([
-        "location",
-        "protocol",
-        "redmineToken",
-        "checkObservadas",
-        "checkNome"], async function (items) {
-            try {
+    try {
+        chrome.storage.local.get([
+            "location",
+            "protocol",
+            "redmineToken",
+            "checkObservadas",
+            "checkNome",
+            "statusAndamento"], async function (items) {
                 if (!items.protocol) return
                 if (!items.location) return
                 if (!items.redmineToken) return
@@ -91,14 +114,20 @@ function watchIssues() {
                             }
                         })
                     })
+                    var andamento = 0
                     result.issues.forEach(issue => {
                         let inserir = true
                         for (let index = 0; index < novaListaNome.length; index++) {
                             const observada = novaListaNome[index]
                             if (observada.id == issue.id) {
                                 inserir = false
-                                return
+                                break
                             }
+                        }
+                        if (issue.status.id.toString() === items.statusAndamento) {
+                            andamento++
+                            if (andamento > 1)
+                                notificarExecucao(andamento)
                         }
                         if (inserir) {
                             let novo = {
@@ -111,13 +140,15 @@ function watchIssues() {
                             if (!firstTime) notificar(novo, 2)
                         }
                     })
+                    if (andamento == 0)
+                        notificarExecucao(andamento)
                     firstTime = false
                     listaNome = novaListaNome
                 }
-            }
-            finally {
-                setTimeout(watchIssues, 20000)
-            }
-        })
+            })
+    }
+    finally {
+        setTimeout(watchIssues, 30000)
+    }
 }
 watchIssues()
