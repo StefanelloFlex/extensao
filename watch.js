@@ -2,11 +2,12 @@ var firstTime = true
 var listaObservadas = []
 var listaNome = []
 var ultimaNotificacaoExecucao = null
+var ultimaExecucaoWatchIssues = null
 
 function callback(notificationId) {
     chrome.storage.local.get(["location", "protocol"], function (items) {
         if (!items.location) return
-        if (notificationId == 'andamento')
+        if (notificationId == "andamento")
             chrome.tabs.create({ "url": items.protocol + "//" + items.location + "/redmine/issues?query_id=417" })
         else
             chrome.tabs.create({ "url": items.protocol + "//" + items.location + "/redmine/issues/" + notificationId })
@@ -18,7 +19,7 @@ function notificarExecucao(contagem) {
     let agora = new Date()
     if (ultimaNotificacaoExecucao != null && ((agora.getTime() - ultimaNotificacaoExecucao.getTime()) / 60000) < 5)
         return
-    ultimaNotificacaoExecucao = new Date()
+    ultimaNotificacaoExecucao = agora
 
     let options = { type: "basic", iconUrl: "128.png" }
     if (contagem > 0) {
@@ -29,7 +30,7 @@ function notificarExecucao(contagem) {
         options.title = "Nenhum chamado em andamento!\n"
         options.message = "Você não possui chamado em andamento. Verifique\n"
     }
-    chrome.notifications.create('andamento', options)
+    chrome.notifications.create("andamento", options)
 }
 
 function notificar(issue, tipo) {
@@ -48,14 +49,19 @@ function notificar(issue, tipo) {
 }
 
 function watchIssues() {
-    try {
-        chrome.storage.local.get([
-            "location",
-            "protocol",
-            "redmineToken",
-            "checkObservadas",
-            "checkNome",
-            "statusAndamento"], async function (items) {
+    chrome.storage.local.get([
+        "location",
+        "protocol",
+        "redmineToken",
+        "checkObservadas",
+        "checkNome",
+        "statusAndamento"], async function (items) {
+            try {
+                let agora = new Date()
+                if (ultimaExecucaoWatchIssues != null && ((agora.getTime() - ultimaExecucaoWatchIssues.getTime()) / 60000) < 1)
+                    return
+                ultimaExecucaoWatchIssues = agora
+
                 if (!items.protocol) return
                 if (!items.location) return
                 if (!items.redmineToken) return
@@ -101,7 +107,7 @@ function watchIssues() {
                     })
                     listaObservadas = novaListaObservadas
                 }
-                if (items.checkNome) {
+                if (items.checkNome || items.statusAndamento) {
                     var novaListaNome = []
                     const atribuidas = await fetch(items.protocol + "//" + items.location + "/redmine/issues.json?set_filter=1&assigned_to_id=me&status_id=o&limit=100", options)
                     const result = await atribuidas.json()
@@ -124,7 +130,7 @@ function watchIssues() {
                                 break
                             }
                         }
-                        if (issue.status.id.toString() === items.statusAndamento) {
+                        if (issue.status.id.toString() == items.statusAndamento) {
                             andamento++
                             if (andamento > 1)
                                 notificarExecucao(andamento)
@@ -137,7 +143,8 @@ function watchIssues() {
                                 status_name: issue.status.name
                             }
                             novaListaNome.push(novo)
-                            if (!firstTime) notificar(novo, 2)
+                            if ((!firstTime) && items.checkNome)
+                                notificar(novo, 2)
                         }
                     })
                     if (andamento == 0)
@@ -145,10 +152,11 @@ function watchIssues() {
                     firstTime = false
                     listaNome = novaListaNome
                 }
-            })
-    }
-    finally {
-        setTimeout(watchIssues, 60000)
-    }
+
+            }
+            finally {
+                setTimeout(watchIssues, 5000)
+            }
+        })
 }
 watchIssues()
