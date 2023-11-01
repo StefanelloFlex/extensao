@@ -1,1 +1,1 @@
-chrome.storage.local.set({ "location": location.hostname, "protocol": location.protocol })
+chrome.runtime.sendMessage(location, null, (response) => { })

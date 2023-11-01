@@ -3,15 +3,24 @@ var listaObservadas = []
 var listaNome = []
 var ultimaNotificacaoExecucao = null
 var ultimaExecucaoWatchIssues = null
+var hostname = ''
+var protocol = ''
+
+chrome.runtime.onMessage.addListener(
+    function (location, sender, sendResponse) {
+        hostname = location.hostname
+        protocol = location.protocol
+    }
+)
 
 function callback(notificationId) {
-    chrome.storage.local.get(["location", "protocol"], function (items) {
-        if (!items.location) return
-        if (notificationId == "andamento")
-            chrome.tabs.create({ "url": items.protocol + "//" + items.location + "/redmine/issues?query_id=417" })
-        else
-            chrome.tabs.create({ "url": items.protocol + "//" + items.location + "/redmine/issues/" + notificationId })
-    })
+    if (!hostname) return
+    if (!protocol) return
+
+    if (notificationId == "andamento")
+        chrome.tabs.create({ "url": protocol + "//" + hostname + "/redmine/issues?query_id=417" })
+    else
+        chrome.tabs.create({ "url": protocol + "//" + hostname + "/redmine/issues/" + notificationId })
 }
 chrome.notifications.onClicked.addListener(callback)
 
@@ -50,8 +59,6 @@ function notificar(issue, tipo) {
 
 function watchIssues() {
     chrome.storage.local.get([
-        "location",
-        "protocol",
         "redmineToken",
         "checkObservadas",
         "checkNome",
@@ -62,15 +69,15 @@ function watchIssues() {
                     return
                 ultimaExecucaoWatchIssues = agora
 
-                if (!items.protocol) return
-                if (!items.location) return
+                if (!protocol) return
+                if (!hostname) return
                 if (!items.redmineToken) return
 
                 const options = { headers: { "X-Redmine-API-Key": items.redmineToken } }
 
                 if (items.checkObservadas) {
                     var novaListaObservadas = []
-                    const observadas = await fetch(items.protocol + "//" + items.location + "/redmine/issues.json?set_filter=1&watcher_id=me&limit=100", options)
+                    const observadas = await fetch(protocol + "//" + hostname + "/redmine/issues.json?set_filter=1&watcher_id=me&limit=100", options)
                     const result = await observadas.json()
 
                     listaObservadas.forEach(observada => {
@@ -109,7 +116,7 @@ function watchIssues() {
                 }
                 if (items.checkNome || items.statusAndamento) {
                     var novaListaNome = []
-                    const atribuidas = await fetch(items.protocol + "//" + items.location + "/redmine/issues.json?set_filter=1&assigned_to_id=me&status_id=o&limit=100", options)
+                    const atribuidas = await fetch(protocol + "//" + hostname + "/redmine/issues.json?set_filter=1&assigned_to_id=me&status_id=o&limit=100", options)
                     const result = await atribuidas.json()
 
                     listaNome.forEach(observada => {
