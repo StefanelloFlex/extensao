@@ -3,17 +3,17 @@ var listaObservadas = []
 var listaNome = []
 var ultimaNotificacaoExecucao = null
 var ultimaExecucaoWatchIssues = null
-var hostname = ''
-var protocol = ''
+var hostname = ""
+var protocol = ""
 
-chrome.runtime.onMessage.addListener(
-    function (location, sender, sendResponse) {
-        hostname = location.hostname
-        protocol = location.protocol
-    }
-)
+chrome.storage.session.setAccessLevel({ accessLevel: "TRUSTED_AND_UNTRUSTED_CONTEXTS" })
 
-function callback(notificationId) {
+chrome.runtime.onMessage.addListener(function (location, sender, sendResponse) {
+    hostname = location.hostname
+    protocol = location.protocol
+})
+
+chrome.notifications.onClicked.addListener(function (notificationId) {
     if (!hostname) return
     if (!protocol) return
 
@@ -21,41 +21,7 @@ function callback(notificationId) {
         chrome.tabs.create({ "url": protocol + "//" + hostname + "/redmine/issues?query_id=417" })
     else
         chrome.tabs.create({ "url": protocol + "//" + hostname + "/redmine/issues/" + notificationId })
-}
-chrome.notifications.onClicked.addListener(callback)
-
-function notificarExecucao(contagem) {
-    let agora = new Date()
-    if (ultimaNotificacaoExecucao != null && ((agora.getTime() - ultimaNotificacaoExecucao.getTime()) / 60000) < 5)
-        return
-    ultimaNotificacaoExecucao = agora
-
-    let options = { type: "basic", iconUrl: "128.png" }
-    if (contagem > 0) {
-        options.title = "Mais de um chamado em andamento!\n"
-        options.message = "Há mais de um chamado em andamento no seu nome. Verifique\n"
-    }
-    else {
-        options.title = "Nenhum chamado em andamento!\n"
-        options.message = "Você não possui chamado em andamento. Verifique\n"
-    }
-    chrome.notifications.create("andamento", options)
-}
-
-function notificar(issue, tipo) {
-    let options = {
-        type: "basic",
-        title: "#" + issue.id + " - " + issue.subject,
-        iconUrl: "128.png"
-    }
-    if (tipo == 1)
-        options.message = "Mudou para a situação:\n"
-    else if (tipo == 2)
-        options.message = "Foi atribuído à você.\n"
-    options.message += issue.status_name
-
-    chrome.notifications.create(issue.id.toString(), options)
-}
+})
 
 function watchIssues() {
     chrome.storage.local.get([
@@ -167,3 +133,36 @@ function watchIssues() {
         })
 }
 watchIssues()
+
+function notificarExecucao(contagem) {
+    let agora = new Date()
+    if (ultimaNotificacaoExecucao != null && ((agora.getTime() - ultimaNotificacaoExecucao.getTime()) / 60000) < 5)
+        return
+    ultimaNotificacaoExecucao = agora
+
+    let options = { type: "basic", iconUrl: "128.png" }
+    if (contagem > 0) {
+        options.title = "Mais de um chamado em andamento!\n"
+        options.message = "Há mais de um chamado em andamento no seu nome. Verifique\n"
+    }
+    else {
+        options.title = "Nenhum chamado em andamento!\n"
+        options.message = "Você não possui chamado em andamento. Verifique\n"
+    }
+    chrome.notifications.create("andamento", options)
+}
+
+function notificar(issue, tipo) {
+    let options = {
+        type: "basic",
+        title: "#" + issue.id + " - " + issue.subject,
+        iconUrl: "128.png"
+    }
+    if (tipo == 1)
+        options.message = "Mudou para a situação:\n"
+    else if (tipo == 2)
+        options.message = "Foi atribuído à você.\n"
+    options.message += issue.status_name
+
+    chrome.notifications.create(issue.id.toString(), options)
+}
