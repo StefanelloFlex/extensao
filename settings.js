@@ -3,7 +3,9 @@ const saveOptions = () => {
         "redmineToken": document.getElementById("redmineToken").value,
         "checkObservadas": document.getElementById("checkObservadas").checked,
         "checkNome": document.getElementById("checkNome").checked,
-        "statusAndamento": document.getElementById("statusAndamento").value
+        "statusAndamento": document.getElementById("statusAndamento").value,
+        "redmineUser": document.getElementById("redmineUser").value,
+        "redminePass": document.getElementById("redminePass").value
     }, function () {
         document.getElementById("alertSuccess").removeAttribute("style")
         setTimeout(function () {
@@ -17,11 +19,15 @@ const restoreOptions = () => {
         "redmineToken",
         "checkObservadas",
         "checkNome",
-        "statusAndamento"], function (items) {
-            document.getElementById("redmineToken").value = items.redmineToken
-            document.getElementById("checkObservadas").checked = items.checkObservadas
-            document.getElementById("checkNome").checked = items.checkNome
-            document.getElementById("statusAndamento").value = items.statusAndamento
+        "statusAndamento",
+        "redmineUser",
+        "redminePass"], function (items) {
+            if (items.redmineToken) document.getElementById("redmineToken").value = items.redmineToken
+            if (items.checkObservadas) document.getElementById("checkObservadas").checked = items.checkObservadas
+            if (items.checkNome) document.getElementById("checkNome").checked = items.checkNome
+            if (items.statusAndamento) document.getElementById("statusAndamento").value = items.statusAndamento
+            if (items.redmineUser) document.getElementById("redmineUser").value = items.redmineUser
+            if (items.redminePass) document.getElementById("redminePass").value = items.redminePass
         })
 }
 

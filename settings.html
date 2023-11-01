@@ -26,9 +26,16 @@
                             <div class="mb-2">
                                 <label for="redmineToken" class="form-label">Chave de acesso à API:</label>
                                 <input type="password" class="form-control" id="redmineToken" aria-describedby="tokenHelp">
-                                <div id="tokenHelp" class="form-text">Disponível em Redmine > Minha conta.</div>
+                                <div id="tokenHelp" class="form-text">Disponível em Redmine > Minha conta. Necessário para notificações</div>
                             </div>
-                            <label for="statusAndamento" class="form-label">Situração de tarefa em andamnto:</label>
+                            <div class="mb-2">
+                                <label for="redmineToken" class="form-label">Nome de usuário:</label>
+                                <input type="email" class="form-control" id="redmineUser" aria-describedby="usernameHelp">
+                                <label for="redmineToken" class="form-label">Senha:</label>
+                                <input type="password" class="form-control" id="redminePass" aria-describedby="usernameHelp">
+                                <div id="usernameHelp" class="form-text">Necessário para fazer login automaticamente</div>
+                            </div>
+                            <label for="statusAndamento" class="form-label">Situação de tarefa em andamnto:</label>
                             <select class="form-select" id="statusAndamento" aria-describedby="andamentoHelp">
                                 <option selected></option>
                                 <option value="9">Em Desenvolvimento (D)</option>
