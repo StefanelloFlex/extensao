@@ -1,0 +1,88 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <style>
+        body {
+            background-color: transparent
+        }
+
+        * {
+            font-size: 12px;
+            line-height: 1.21
+        }
+
+        .form-label {
+            margin-bottom: 2px
+        }
+
+        form {
+            margin-block-end: 0;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        .card-body {
+            padding-top: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <form>
+            <div class="card-header">
+                <div class="row h-100 align-items-center">
+                    <strong class="col-5">Apontador de horas</strong>
+                    <div class="btn-group col-7" role="group">
+                        <button type="button" class="btn btn-outline-primary col-5" id="btnTimerCancelar">Cancelar</button>
+                        <button type="button" class="btn btn-outline-danger col-7" id="btnTimerIniciarParar">Iniciar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-2">
+                    <div class="col-5"><strong>Chamado:</strong> #000000</div>
+                    <div class="col-3"><strong>Início:</strong><br>00:00</div>
+                    <div class="col-4"><strong>Total:</strong><br><p id="timerTotal">00:00:00</p></div>
+                </div>
+
+                <div class="mb-1" style="margin-top: -12;">
+                    <label for="inputGroupSelect04" class="form-label">Atividade: *</label>
+                    <select class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon"
+                        required>
+                        <option selected></option>
+                        <option value="9">Desenvolvimento</option>
+                        <option value="54">Desenvolvimento Retornos</option>
+                        <option value="10">Teste de qualidade</option>
+                        <option value="61">Contagem de Retorno</option>
+                        <option value="11">Análise</option>
+                        <option value="8">Atendimento</option>
+                        <option value="29">Reuniões</option>
+                        <option value="60">Organização e Processos</option>
+                        <option value="28">Implantação</option>
+                        <option value="51">Automação</option>
+                        <option value="63">Treinamento</option>
+                        <option value="50">Solicitação de Situação</option>
+                        <option value="59">Documentação Sistema</option>
+                        <option value="56">Apoio Setor Testes</option>
+                        <option value="58">Estudo Sistema</option>
+                        <option value="57">Apoio Setor Desenvolvimento</option>
+                        <option value="55">Apoio Setor Suporte</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="exampleFormControlTextarea1" class="form-label">Comentário:</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="bootstrap.bundle.min.js"></script>
+    <script src="timer.js"></script>
+</body>
+
+</html>

@@ -32,5 +32,15 @@
             ]
         }
     ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "timer.html", "timer.js"
+            ],
+            "matches": [
+                "*://*/*"
+            ]
+        }
+    ],
     "manifest_version": 3
 }
