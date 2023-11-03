@@ -1,0 +1,109 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <style>
+        body {
+            background-color: transparent
+        }
+
+        * {
+            font-size: 12px;
+            line-height: 1.21
+        }
+
+        .form-label {
+            margin-bottom: 2px
+        }
+
+        form {
+            margin-block-end: 0;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        .card-body {
+            padding-top: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <form>
+            <div class="card-header">
+                <div class="row h-100 align-items-center">
+                    <strong class="col-5">Apontador de horas</strong>
+                    <div class="btn-group col-7" role="group">
+                        <button type="button" class="btn btn-outline-danger col-5" id="btnTimerIniciar">Iniciar</button>
+                        <button type="button" class="btn btn-outline-success col-7" id="btnTimerParar"
+                            disabled>Parar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+
+
+                <div class="alert alert-danger alert-dismissible fade show" id="timerAlertDanger"
+                    style="position: absolute;" role="alert" hidden>
+                    <p></p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <div class="alert alert-success alert-dismissible fade show" id="timerAlertSuccess"
+                    style="position: absolute;" role="alert" hidden>
+                    <p></p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-5 d-flex"><strong>Chamado:</strong>&nbsp#<p id="timerIssue">000000</p>
+                    </div>
+                    <div class="row col-7">
+                        <div class="col-5" style="margin-left: 4px; margin-right: -4px;"><strong>In&iacute;cio:</strong><br>
+                            <p id="timerInicio">00:00</p>
+                        </div>
+                        <div class="col-7" style="margin-left: 4px; margin-right: -4px;"><strong>Total:</strong><br>
+                            <p id="timerTotal">00:00:00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-1" style="margin-top: -20px;">
+                    <label for="inputGroupSelect04" class="form-label">Atividade: *</label>
+                    <select class="form-select" id="timerActivity" aria-label="Example select with button addon"
+                        required>
+                        <option selected></option>
+                        <option value="9">Desenvolvimento</option>
+                        <option value="54">Desenvolvimento Retornos</option>
+                        <option value="10">Teste de qualidade</option>
+                        <option value="61">Contagem de Retorno</option>
+                        <option value="11">An&aacute;lise</option>
+                        <option value="8">Atendimento</option>
+                        <option value="29">Reuni&otilde;es</option>
+                        <option value="60">Organiza&ccedil;&atilde;o e Processos</option>
+                        <option value="28">Implanta&ccedil;&atilde;o</option>
+                        <option value="51">Automa&ccedil;&atilde;o</option>
+                        <option value="63">Treinamento</option>
+                        <option value="50">Solicita&ccedil;&atilde;o de Situa&ccedil;&atilde;o</option>
+                        <option value="59">Documenta&ccedil;&atilde;o Sistema</option>
+                        <option value="56">Apoio Setor Testes</option>
+                        <option value="58">Estudo Sistema</option>
+                        <option value="57">Apoio Setor Desenvolvimento</option>
+                        <option value="55">Apoio Setor Suporte</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="exampleFormControlTextarea1" class="form-label">Coment&aacute;rio:</label>
+                    <textarea class="form-control" id="timerComment" rows="2"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="bootstrap.bundle.min.js"></script>
+    <script src="timer.js"></script>
+</body>
+
+</html>

@@ -105,7 +105,7 @@ function watchIssues() {
                         }
                         if (issue.status.id.toString() == items.statusAndamento) {
                             andamento++
-                            if (andamento > 1)
+                            if (andamento > 1 && items.statusAndamento)
                                 notificarExecucao(andamento)
                         }
                         if (inserir) {
@@ -120,7 +120,7 @@ function watchIssues() {
                                 notificar(novo, 2)
                         }
                     })
-                    if (andamento == 0)
+                    if (andamento == 0 && items.statusAndamento)
                         notificarExecucao(andamento)
                     firstTime = false
                     listaNome = novaListaNome
