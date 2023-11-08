@@ -29,110 +29,104 @@ function watchIssues() {
         "checkObservadas",
         "checkNome",
         "statusAndamento"], async function (items) {
-            try {
-                let agora = new Date()
-                if (ultimaExecucaoWatchIssues != null && ((agora.getTime() - ultimaExecucaoWatchIssues.getTime()) / 60000) < 1)
-                    return
-                ultimaExecucaoWatchIssues = agora
+            let agora = new Date()
+            if (ultimaExecucaoWatchIssues != null && ((agora.getTime() - ultimaExecucaoWatchIssues.getTime()) / 60000) < 1)
+                return
+            ultimaExecucaoWatchIssues = agora
 
-                if (!protocol) return
-                if (!hostname) return
-                if (!items.redmineToken) return
+            if (!protocol) return
+            if (!hostname) return
+            if (!items.redmineToken) return
 
-                const options = { headers: { "X-Redmine-API-Key": items.redmineToken } }
+            const options = { headers: { "X-Redmine-API-Key": items.redmineToken } }
 
-                if (items.checkObservadas) {
-                    var novaListaObservadas = []
-                    const observadas = await fetch(protocol + "//" + hostname + "/redmine/issues.json?set_filter=1&watcher_id=me&limit=100", options)
-                    const result = await observadas.json()
+            if (items.checkObservadas) {
+                var novaListaObservadas = []
+                const observadas = await fetch(protocol + "//" + hostname + "/redmine/issues.json?set_filter=1&watcher_id=me&limit=100", options)
+                const result = await observadas.json()
 
-                    listaObservadas.forEach(observada => {
-                        result.issues.forEach(issue => {
-                            if (observada.id == issue.id) {
-                                novaListaObservadas.push(observada)
-                                return
-                            }
-                        })
-                    })
+                listaObservadas.forEach(observada => {
                     result.issues.forEach(issue => {
-                        let inserir = true
-                        for (let index = 0; index < novaListaObservadas.length; index++) {
-                            const observada = novaListaObservadas[index]
-                            if (observada.id == issue.id) {
-                                inserir = false
-                                if (observada.status != issue.status.id) {
-                                    novaListaObservadas[index].status = issue.status.id
-                                    novaListaObservadas[index].status_name = issue.status.name
-                                    notificar(novaListaObservadas[index], 1)
-                                }
-                                return
-                            }
-                        }
-                        if (inserir) {
-                            let novo = {
-                                id: issue.id,
-                                subject: issue.subject,
-                                status: issue.status.id,
-                                status_name: issue.status.name
-                            }
-                            novaListaObservadas.push(novo)
+                        if (observada.id == issue.id) {
+                            novaListaObservadas.push(observada)
+                            return
                         }
                     })
-                    listaObservadas = novaListaObservadas
-                }
-                if (items.checkNome || items.statusAndamento) {
-                    var novaListaNome = []
-                    const atribuidas = await fetch(protocol + "//" + hostname + "/redmine/issues.json?set_filter=1&assigned_to_id=me&status_id=o&limit=100", options)
-                    const result = await atribuidas.json()
-
-                    listaNome.forEach(observada => {
-                        result.issues.forEach(issue => {
-                            if (observada.id == issue.id) {
-                                novaListaNome.push(observada)
-                                return
+                })
+                result.issues.forEach(issue => {
+                    let inserir = true
+                    for (let index = 0; index < novaListaObservadas.length; index++) {
+                        const observada = novaListaObservadas[index]
+                        if (observada.id == issue.id) {
+                            inserir = false
+                            if (observada.status != issue.status.id) {
+                                novaListaObservadas[index].status = issue.status.id
+                                novaListaObservadas[index].status_name = issue.status.name
+                                notificar(novaListaObservadas[index], 1)
                             }
-                        })
-                    })
-                    var andamento = 0
-                    result.issues.forEach(issue => {
-                        let inserir = true
-                        for (let index = 0; index < novaListaNome.length; index++) {
-                            const observada = novaListaNome[index]
-                            if (observada.id == issue.id) {
-                                inserir = false
-                                break
-                            }
+                            return
                         }
-                        if (issue.status.id.toString() == items.statusAndamento) {
-                            andamento++
-                            if (andamento > 1 && items.statusAndamento)
-                                notificarExecucao(andamento)
+                    }
+                    if (inserir) {
+                        let novo = {
+                            id: issue.id,
+                            subject: issue.subject,
+                            status: issue.status.id,
+                            status_name: issue.status.name
                         }
-                        if (inserir) {
-                            let novo = {
-                                id: issue.id,
-                                subject: issue.subject,
-                                status: issue.status.id,
-                                status_name: issue.status.name
-                            }
-                            novaListaNome.push(novo)
-                            if ((!firstTime) && items.checkNome)
-                                notificar(novo, 2)
-                        }
-                    })
-                    if (andamento == 0 && items.statusAndamento)
-                        notificarExecucao(andamento)
-                    firstTime = false
-                    listaNome = novaListaNome
-                }
-
+                        novaListaObservadas.push(novo)
+                    }
+                })
+                listaObservadas = novaListaObservadas
             }
-            finally {
-                setTimeout(watchIssues, 5000)
+            if (items.checkNome || items.statusAndamento) {
+                var novaListaNome = []
+                const atribuidas = await fetch(protocol + "//" + hostname + "/redmine/issues.json?set_filter=1&assigned_to_id=me&status_id=o&limit=100", options)
+                const result = await atribuidas.json()
+
+                listaNome.forEach(observada => {
+                    result.issues.forEach(issue => {
+                        if (observada.id == issue.id) {
+                            novaListaNome.push(observada)
+                            return
+                        }
+                    })
+                })
+                var andamento = 0
+                result.issues.forEach(issue => {
+                    let inserir = true
+                    for (let index = 0; index < novaListaNome.length; index++) {
+                        const observada = novaListaNome[index]
+                        if (observada.id == issue.id) {
+                            inserir = false
+                            break
+                        }
+                    }
+                    if (issue.status.id.toString() == items.statusAndamento) {
+                        andamento++
+                        if (andamento > 1 && items.statusAndamento)
+                            notificarExecucao(andamento)
+                    }
+                    if (inserir) {
+                        let novo = {
+                            id: issue.id,
+                            subject: issue.subject,
+                            status: issue.status.id,
+                            status_name: issue.status.name
+                        }
+                        novaListaNome.push(novo)
+                        if ((!firstTime) && items.checkNome)
+                            notificar(novo, 2)
+                    }
+                })
+                if (andamento == 0 && items.statusAndamento)
+                    notificarExecucao(andamento)
+                firstTime = false
+                listaNome = novaListaNome
             }
         })
 }
-watchIssues()
+setInterval(watchIssues, 5000)
 
 function notificarExecucao(contagem) {
     let agora = new Date()
