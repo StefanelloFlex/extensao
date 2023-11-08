@@ -27,12 +27,15 @@ chrome.storage.local.get([
                 headers: { "X-Redmine-API-Key": items.redmineToken, "Content-Type": "application/json" },
                 body: JSON.stringify(event.data),
             }
-
             fetch(location.protocol + "//" + location.hostname + "/redmine/time_entries.json", options)
                 .then(response => response.text())
                 .then((result) => {
-                    frame.contentWindow.postMessage({ "response": result, "body": event.data }, "*")
-                    location.reload()
+                    if (JSON.parse(result).errors)
+                        frame.contentWindow.postMessage({ "error": JSON.parse(result).errors[0] }, "*")
+                    else {
+                        frame.contentWindow.postMessage({ "response": result, "body": event.data }, "*")
+                        location.reload()
+                    }
                 })
                 .catch((error) => {
                     frame.contentWindow.postMessage({ "error": error }, "*")
