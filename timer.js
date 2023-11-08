@@ -39,7 +39,7 @@
             let inicio = new Date(items.timerInicio)
             let final = new Date()
             let diff = Math.abs(inicio - final)
-            let hours = (Math.floor(diff / 36e5))
+            let hours = diff / 36e5
 
             let data = {
                 time_entry: {
@@ -129,14 +129,14 @@
     window.onmessage = function (event) {
         if (event.data.response) {
             chrome.storage.local.set({ "timerInicio": "" }, setted_parado)
-            document.getElementById("timerAlertSuccess").children[0].innerText = "Tempo gasto: " + (Math.round(event.data.body.time_entry.hours * 100) / 100).toFixed(2) + " h"
+            document.getElementById("timerAlertSuccess").children[0].innerText = "Tempo gasto: " + event.data.body.time_entry.hours.toFixed(2) + " h"
             document.getElementById("timerAlertSuccess").removeAttribute("hidden")
-            setTimeout(function () { document.getElementById("timerAlertSuccess").setAttribute("hidden", True) }, 1250)
+            setTimeout(function () { document.getElementById("timerAlertSuccess").setAttribute("hidden", true) }, 1250)
         }
         else if (event.data.error) {
             document.getElementById("timerAlertDanger").children[0].innerText = event.data.error
             document.getElementById("timerAlertDanger").removeAttribute("hidden")
-            setTimeout(function () { document.getElementById("timerAlertSuccess").setAttribute("hidden", True) }, 2250)
+            setTimeout(function () { document.getElementById("timerAlertSuccess").setAttribute("hidden", true) }, 2250)
         }
     }
 }
