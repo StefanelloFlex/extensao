@@ -104,8 +104,10 @@ function watchIssues() {
                     }
                     if (issue.status.id.toString() == items.statusAndamento) {
                         andamento++
-                        if (andamento > 1 && items.statusAndamento)
+                        if (andamento > 1 && items.statusAndamento) {
                             notificarExecucao(andamento)
+                            return
+                        }
                     }
                     if (inserir) {
                         let novo = {
@@ -119,8 +121,12 @@ function watchIssues() {
                             notificar(novo, 2)
                     }
                 })
-                if (andamento == 0 && items.statusAndamento)
-                    notificarExecucao(andamento)
+                if (items.statusAndamento) {
+                    if (andamento == 0)
+                        notificarExecucao(andamento)
+                    else if (andamento == 1)
+                        chrome.notifications.clear("andamento")
+                }
                 firstTime = false
                 listaNome = novaListaNome
             }
